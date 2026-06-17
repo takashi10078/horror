@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ホラー診断</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body class="index-body"> 
+
+<div id="darkness"></div>
+
+
+<!-- ホームボタン -->
+<a href="./index.html" class="home-btn">
+  home
+</a>
+
+    
+<div id="wrapper">
+
+    <!-- 質問フォーム -->
+        <div class="flex-container">
+            <div class="sindan_block">            
+                <!-- 左側 -->
+                <div class="text-box">
+                    <h1>あなたの...</h1><br>
+                    <h2>全30問の質問に答えると<br>いいことが起こります</h2>
+                    
+                    <div class="info-list">
+                        <div class="info-item"><span class="icon">？</span> 診断時間：30秒</div>
+                        <div class="info-item"><span class="icon">🕒</span> 全30問の質問に直感で回答してください</div>
+                        <div class="info-item"><span class="icon">🫳</span> あなたの深層心理が見えてくるかも...</div>
+                    </div>
+
+                    <button id="startBtn" class="styled">診断スタート</button><br>
+                    <a href="./result.html" class="styled">結果を見る<span class="black-and-white-emoji">👁️</span></a>
+                </div>
+                <!-- 右側 -->
+                <form id="sindanForm" style="display: none;">
+                    <div id="answerTimer" class="answer-timer">00:45</div>
+                    <div id="questions">
+                        <img id="ghostWoman" class="scary-ghost scary-ghost-main" src="img/woman.png" alt="怖い女性">
+                        <img class="scary-ghost scary-ghost-left" src="img/woman.png" alt="怖い女性">
+                        <img class="scary-ghost scary-ghost-right" src="img/woman.png" alt="怖い女性">
+                        <img class="scary-ghost scary-ghost-center" src="img/woman.png" alt="怖い女性">
+                        <img class="scary-ghost scary-ghost-far-right" src="img/woman.png" alt="怖い女性">
+                    </div>
+                    <!-- 診断ボタン -->
+                    <div class="block" id="submitBlock" style="display: none;">
+                        <input class="styled" type="submit" value="しんだんする">
+                    </div>
+                </form>
+            </div>
+
+
+
+        <div id="avatar-frame">
+            <img class="part body" src="img/body.png">
+            <img class="part hair" src="img/hair.png">
+            <img class="part face" src="img/face.png">
+            <img class="part eyes" src="img/eyes.png">
+            <img class="part fronthair" src="img/fronthair.png">
+        </div>
+
+        </div>
+    </div>
+
+</div>
+    
+    <script src="./character.js"></script>
+    <script src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,790 @@
+* {
+    /* 余白をすべて0にリセット */
+    margin: 0px;
+    padding: 0px;
+}
+
+.index-body {
+    /* 画面をスクロールさせない */
+    overflow: hidden; 
+}
+
+@font-face {
+    font-family: 'Onryou';
+    src: url('./onryou/onryou.TTF') format('truetype');
+}
+
+body {
+    /* 中身を中央寄せ */
+    text-align: center;
+    color: #939393;
+
+    /* 背景画像の設定 */
+    background-image: url(./img/back.png);
+
+    /* 背景画像を画面幅120%に合わせる */
+    background-size: 120%;
+
+    /* スクロールしても背景を動かさない */
+    background-attachment: fixed;
+
+    /* 手書き風フォントを適用 */
+    font-family: 'Onryou', serif;
+
+    margin: 0;
+
+    /* 画面の縦幅をいっぱいに確保 */
+    min-height: 100vh;
+
+    /* 背景をゆらゆら */
+    animation: hospitalMove 50s linear infinite;
+}
+
+@keyframes hospitalMove {
+    0%   { background-position: 50% 50%; }
+    10%  { background-position: 47% 49%; }
+    20%  { background-position: 45% 52%; }
+    30%  { background-position: 48% 54%; }
+    40%  { background-position: 52% 53%; }
+    50%  { background-position: 55% 50%; }
+    60%  { background-position: 54% 47%; }
+    70%  { background-position: 50% 46%; }
+    80%  { background-position: 46% 48%; }
+    90%  { background-position: 48% 52%; }
+    100% { background-position: 50% 50%; }
+}
+
+/* 結果遷移演出 */
+body.result-transition {
+    animation: hospitalMove 0.8s linear infinite;
+    filter: brightness(60%) contrast(150%);
+}
+
+/* 診断画面全体を揺らす */
+body.result-transition .flex-container {
+    animation: screenShake 0.06s infinite;
+}
+
+/* アバターを暴れさせる */
+body.result-transition #avatar-frame {
+    animation:
+        screenShake 0.04s infinite,
+        houseMove 2s linear infinite;
+}
+
+/* 徐々に暗転 */
+body.result-transition::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: black;
+    opacity: 0;
+    animation: fadeDark 3.5s forwards;
+    pointer-events: none;
+    z-index: 99999;
+}
+
+@keyframes screenShake {
+    0%   { transform: translate(0,0); }
+    25%  { transform: translate(-5px,3px); }
+    50%  { transform: translate(5px,-3px); }
+    75%  { transform: translate(-4px,-2px); }
+    100% { transform: translate(0,0); }
+}
+
+@keyframes fadeDark {
+    0% {
+        opacity: 0;
+    }
+
+    60% {
+        opacity: 0.05;
+    }
+
+    80% {
+        opacity: 0.15;
+    }
+
+    95% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#wrapper {
+    min-height: 100vh;
+    /* 中身を画面の上下左右の真ん中に配置 */
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+
+a {
+    /* リンクの下線を消す */
+    text-decoration: none;
+}
+
+h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 45px;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 35px;
+}
+
+h3 {
+    margin-top: 10px;
+    font-size: 30px;
+}
+
+h4 {
+    margin: 20px auto 20px;
+    font-size: 45px;
+}
+
+.home-btn {
+    /* ボタンを画面の右上に固定 */
+    color: #939393;
+    position: fixed; 
+    top: 2px;       
+    right: 5px;     
+    /* 最前面に表示 */
+    z-index: 9999;   
+    
+    font-size: 30px; 
+    text-decoration: none; 
+    /* マウスを乗せたときに指マークにする */
+    cursor: pointer; 
+}
+
+.flex-container {
+    /* 質問とアバターを横並びにする */
+    display: flex;
+    /* 中身を中央寄せ */
+    justify-content: center; 
+    gap: 1vw;               
+    /* 横並びの上のラインを揃える */
+    align-items: flex-start;
+    /* 全体の最大横幅 */
+    width: 94vw;
+    height: 84vh;
+    /* 全体を画面の真ん中に寄せる */
+    margin: 0 auto 0;          
+    padding: 20px 0 20px;
+    background-color: rgba(12, 8, 8, 0.541);
+    /* 角を丸くする */
+    border-radius: 10px;
+    /* 外側に影をつける */
+    box-shadow:1px 1px 20px 1px rgb(128, 128, 128);
+}
+
+.sindan_block {
+    /* 左右の枠をバランスよく伸縮させる */
+    flex: 1;
+    width: 100%;
+    max-width: 480px;
+    height: 85vh;
+    text-align: center;
+}
+
+#sindanForm {
+    width: 100%;
+    /* 高さを330pxに固定 */
+    height: 84vh;             
+    /* はみ出た質問は縦スクロールさせる */
+    overflow-y: scroll;       
+    /* スクロールバーと文字の重なり防止 */
+    padding-right: 15px;      
+    /* 余白を含めてサイズを固定 */
+    box-sizing: border-box;
+}
+
+.text-box {
+    text-align: center;              
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+
+    /* 💡 変更：背景画像を前面の文字から切り離すための設定 */
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    gap: 5px; 
+}
+
+/* 💡 追加：背景画像だけを配置して半透明にする設定 */
+.text-box::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    background-image: url(./img/texture.png);
+    
+    /* 💡 少し長めの秒数（例: 8秒）で歪なループを再生する */
+    animation: irregular-fade 8s ease-in-out infinite;
+}
+
+/* 💡 点滅の間隔や、見えている時間をわざとバラバラにする */
+@keyframes irregular-fade {
+    0%   { opacity: 0; }
+    10%  { opacity: 0.3; } /* 💡 パッとすぐつく */
+    35%  { opacity: 0.3; } /* 💡 しばらくついたまま（長め1） */
+    40%  { opacity: 0; }   /* フッと一瞬消える */
+    50%  { opacity: 0; }   /* 短い消灯時間 */
+    60%  { opacity: 0.3; } /* またすぐつく */
+    90%  { opacity: 0.3; } /* 💡 かなり長くついたまま（長め2） */
+    100% { opacity: 0; }   /* 最後に消える */
+}
+
+.text-box h2 { 
+    font-size: 28px;
+}
+/* スクロールバーの背景（レール） */
+#sindanForm::-webkit-scrollbar-track {
+    background: #8d8d8d78;
+    border-radius: 10px;
+}
+
+/* スクロールバーの太さ */
+#sindanForm::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* スクロールバーのつまみ（動く部分） */
+#sindanForm::-webkit-scrollbar-thumb {
+    /* ピンクのグラデーション */
+    background: linear-gradient(45deg, #1d1d1d, #4e4e4e);
+    border-radius: 10px;
+}
+
+#questions p {
+    /* 質問ごとの間隔 */
+    margin-bottom: 30px; 
+    /* 質問文を太字に */
+    font-weight: bold;   
+}
+
+p {
+    background-color: rgba(40, 40, 40, 0.596);
+    border-radius: 14px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 17px;
+    padding-bottom: 17px;
+    padding-left: 18px;
+    width: 90%;
+    /* 文章を左詰めで読みやすく */
+    text-align: left;
+    /* 変化を0.2秒でなめらかにする */
+    transition: 0.2s;
+    font-size: 22px;
+    box-shadow:1px 1px 20px 1px rgb(128, 128, 128);
+}
+
+.answer-timer {
+    position: sticky;
+    top: 2px;
+    z-index: 10;
+    width: 120px;
+    margin: 0 auto 16px;
+    padding: 8px 14px;
+    background: rgba(27, 27, 27, 0.9);
+    border: 1px solid #555;
+    border-radius: 50px;
+    box-shadow: 1px 1px 12px 1px rgb(128, 128, 128);
+    color: #b8b8b8;
+    font-size: 24px;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+label {
+    /* 選択肢を一行ずつ縦に並べる */
+    display: block; 
+    text-align: left;
+    margin-left: 18px;
+    margin-top: 10px;
+    font-weight: normal;
+    font-size: 19px;
+}
+
+:root {
+    /* 共通で使うサイズと色の設定 */
+    --radioBtn-size: 22px;
+    --active-color: #9b9b9bcd;
+    --inactive-color: rgb(255, 255, 255);
+}
+
+input[type="radio"] {
+    /* 標準のラジオボタンの見た目を消す */
+    appearance: none;
+
+    width: var(--radioBtn-size);
+    height: var(--radioBtn-size);
+
+    border-radius: 50%;
+    /* フチに線の色をつける */
+    border: 2px solid var(--active-color);
+
+    background-color: rgba(91, 84, 84, 0.607);
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    /* チェック用画像（::after）の位置の基準 */
+    position: relative; 
+}
+
+input[type="radio"]:checked {
+    /* チェック時は元のフチ線を消す */
+    border: none;
+    /* 背景を透明にする */
+    background: transparent;
+}
+
+/* ラジオボタンにチェックが入ったときの画像設定 */
+input[type="radio"]:checked::after {
+    content: "";
+
+    /* ラジオボタンの丸を基準に自由に動かす */
+    position: absolute;
+
+    /* 画像のサイズ */
+    width: 40px;
+    height: 40px;
+
+    /* 画像の中心が重なるように位置を微調整 */
+    top: -4px;
+    left: -10px;
+
+    /* チェック時の画像を指定 */
+    background-image: url("./img/hand.png");
+    /* 枠内に画像を綺麗に収める */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#startBtn {
+    margin-top: 15px;
+    color: #939393;
+    width: 20vw;
+    height: 55px;
+    font-family: 'Onryou', serif;
+}
+
+
+.styled {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 5px auto;
+    width: 20vw;
+    height: 55px;
+
+    font-size: 25px;
+    font-family: 'Onryou', serif;
+
+    border-radius: 50px;
+    border: none;
+
+    background: rgba(27, 27, 27, 0.813);
+    border: 1px solid #555;
+    color: #939393;
+    font-weight: bold;
+    cursor: pointer;
+
+    box-shadow: 1px 1px 3px 1px rgb(128, 128, 128);
+
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.black-and-white-emoji {
+  /* 👁の絵文字を100%完全な白黒（グレースケール）にする */
+  filter: grayscale(100%);
+  
+  /* 任意：少し暗めにして「黒」を強調したい場合は以下も追加 */
+  /* brightness(80%) contrast(120%); */
+}
+
+.resultImg { /*結果画像*/
+    width: 75vw;
+    height: 97vh;
+    background-color: rgba(40, 40, 40, 0.596);
+    border-radius: 14px;
+    box-shadow: 1px 1px 20px 1px rgb(128, 128, 128);
+    margin-top: 5px;
+}
+
+/* 結果表示エリアの設定 */
+#resultArea {
+    box-sizing: border-box;
+}
+
+#resultArea #result p {
+    /* 文章の幅を上の画像（450px）と揃える */
+    width: 450px;
+}
+
+#result{
+    margin-bottom: 50px;
+}
+
+
+#avatar-frame{
+    width: 45vw;
+    height: 80vh;
+
+    position: relative;
+    overflow: hidden;
+
+    background-image: url("./img/house.png");
+    background-size: 120%;
+
+    border-radius: 30px 30px 12px 12px;
+    border: 6px solid #020101a1;
+    box-shadow:1px 1px 20px 1px rgb(128, 128, 128);
+    flex-shrink: 0;
+
+    margin: auto 20px auto 20px;
+
+    animation: houseMove 40s linear infinite;
+}
+
+@keyframes houseMove {
+    0%   { background-position: 50% 50%; }
+    20%  { background-position: 42% 47%; }
+    40%  { background-position: 58% 52%; }
+    60%  { background-position: 55% 58%; }
+    80%  { background-position: 44% 54%; }
+    100% { background-position: 50% 50%; }
+}
+
+.part{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+/* スクロールバーを消す */
+html {
+    scrollbar-gutter: stable;
+}
+
+/* 太さ */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* スクロールバーの背景（レール） */
+::-webkit-scrollbar-track {
+    background: #b2a5a578;
+}
+
+/* スクロールバーのつまみ */
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #1d1d1d, #4e4e4e);
+    border-radius: 10px;
+}
+
+#ghostWoman2{
+    position: fixed;
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+
+    opacity: 0;
+    transform: scale(1.05);
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+
+    pointer-events: none;
+    z-index: 99999;
+}
+
+#ghostWoman2.show{
+    opacity: 1;
+    transform: scale(1);
+    animation: ghostWomanShake 0.35s ease-in-out infinite;
+}
+
+@keyframes ghostWomanShake {
+    0%   { transform: scale(1) translate(0,0) rotate(0deg); }
+    20%  { transform: scale(1) translate(-4px,2px) rotate(-0.5deg); }
+    40%  { transform: scale(1) translate(3px,-2px) rotate(0.4deg); }
+    60%  { transform: scale(1) translate(-3px,-3px) rotate(-0.4deg); }
+    80%  { transform: scale(1) translate(4px,2px) rotate(0.5deg); }
+    100% { transform: scale(1) translate(0,0) rotate(0deg); }
+}
+
+.scary-ghost{
+    position: fixed;
+    bottom: -220px;
+    width: 40vw;
+    opacity: 0;
+    transition:
+        transform 0.03s ease-out,
+        opacity 0.03s ease-out,
+        bottom 0.03s ease-out;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* 真ん中（最前面） */
+.scary-ghost-main{
+    left: 22%;
+    transform: translateX(-50%) translate(0, 0) scale(0.3);
+    z-index: 10001;
+}
+
+/* 左 */
+.scary-ghost-left{
+    left: 17%;
+    transform: translateX(-50%) translate(-46px, 34px) scale(0.3);
+    z-index: 9999;
+}
+
+/* 右 */
+.scary-ghost-right{
+    left: 27%;
+    transform: translateX(-50%) translate(46px, -28px) scale(0.3);
+    z-index: 10000;
+}
+
+/* 真ん中付近 */
+.scary-ghost-center{
+    position: fixed;
+    top: -10vh;
+    left: 55%;
+    transform: translateX(-50%) translate(20px, 10px) scale(0.3,-0.3);
+}
+
+/* 右端付近 */
+.scary-ghost-far-right{
+    left: 85%;
+    transform: translateX(-50%) translate(-20px, 20px) scale(0.3);
+    z-index: 9996;
+}
+
+/* プルプルアニメーション */
+@keyframes ghostShake {
+    0%   { transform: translateX(-50%) translate(0px, 0px) scale(1.43); }
+    20%  { transform: translateX(-50%) translate(-4px, 3px) scale(1.43); }
+    40%  { transform: translateX(-50%) translate(3px, -2px) scale(1.43); }
+    60%  { transform: translateX(-50%) translate(-3px, -4px) scale(1.43); }
+    80%  { transform: translateX(-50%) translate(4px, 2px) scale(1.43); }
+    100% { transform: translateX(-50%) translate(0px, 0px) scale(1.43); }
+}
+
+@keyframes ghostShakeLeft {
+    0%   { transform: translateX(-50%) translate(-46px, 34px) scale(1.25); }
+    20%  { transform: translateX(-50%) translate(-50px, 37px) scale(1.25); }
+    40%  { transform: translateX(-50%) translate(-43px, 31px) scale(1.25); }
+    60%  { transform: translateX(-50%) translate(-49px, 30px) scale(1.25); }
+    80%  { transform: translateX(-50%) translate(-42px, 36px) scale(1.25); }
+    100% { transform: translateX(-50%) translate(-46px, 34px) scale(1.25); }
+}
+
+@keyframes ghostShakeRight {
+    0%   { transform: translateX(-50%) translate(46px, -28px) scale(1.3); }
+    20%  { transform: translateX(-50%) translate(50px, -25px) scale(1.3); }
+    40%  { transform: translateX(-50%) translate(43px, -31px) scale(1.3); }
+    60%  { transform: translateX(-50%) translate(49px, -33px) scale(1.3); }
+    80%  { transform: translateX(-50%) translate(42px, -26px) scale(1.3); }
+    100% { transform: translateX(-50%) translate(46px, -28px) scale(1.3); }
+}
+
+@keyframes ghostShakeCenter {
+    0%   { transform: translateX(-50%) translate(20px,10px) scale(1.15, -1.15); }
+    25%  { transform: translateX(-50%) translate(16px,14px) scale(1.15, -1.15); }
+    50%  { transform: translateX(-50%) translate(24px,7px) scale(1.15, -1.15); }
+    75%  { transform: translateX(-50%) translate(18px,12px) scale(1.15, -1.15); }
+    100% { transform: translateX(-50%) translate(20px,10px) scale(1.15, -1.15); }
+}
+
+@keyframes ghostShakeFarRight {
+    0%   { transform: translateX(-50%) translate(-20px,20px) scale(1.1); }
+    25%  { transform: translateX(-50%) translate(-24px,23px) scale(1.1); }
+    50%  { transform: translateX(-50%) translate(-17px,17px) scale(1.1); }
+    75%  { transform: translateX(-50%) translate(-22px,19px) scale(1.1); }
+    100% { transform: translateX(-50%) translate(-20px,20px) scale(1.1); }
+}
+
+/* 表示時 */
+.scary-ghost-main.show{
+    bottom: 0;
+    opacity: 1;
+    animation: ghostShake 0.8s infinite;
+}
+
+.scary-ghost-left.show{
+    bottom: 0;
+    opacity: 0.85;
+    animation: ghostShakeLeft 0.11s infinite;
+}
+
+.scary-ghost-right.show{
+    bottom: 0;
+    opacity: 0.9;
+    animation: ghostShakeRight 0.14s infinite;
+}
+
+.scary-ghost-center.show{
+    top: -2vh;
+    opacity: 0.9;
+    animation: ghostShakeCenter 0.12s infinite;
+}
+
+.scary-ghost-far-right.show{
+    bottom: 0;
+    opacity: 0.9;
+    animation: ghostShakeFarRight 0.15s infinite;
+}
+
+
+#darkness {
+    position: fixed;
+    inset: 0;
+
+    background: black;
+    opacity: 0.95;
+
+    pointer-events: none;
+    z-index: -1;
+
+    animation: darknessFlicker 8s linear infinite;
+}
+
+@keyframes darknessFlicker {
+
+    /* 通常 */
+    0%, 20%, 100% {
+        opacity: 0.6;
+    }
+
+    /* 少し明るい */
+    10% {
+        opacity: 0.3;
+    }
+
+    /* 暗くなる */
+    30% {
+        opacity: 0.8;
+    }
+
+    /* かなり暗くなる */
+    35% {
+        opacity: 0.92;
+    }
+
+    /* 戻る */
+    40% {
+        opacity: 0.6;
+    }
+
+    /* 電気がチカチカ */
+    60% {
+        opacity: 0.25;
+    }
+
+    61% {
+        opacity: 0.85;
+    }
+
+    62% {
+        opacity: 0.2;
+    }
+
+    63% {
+        opacity: 0.75;
+    }
+
+    64% {
+        opacity: 0.6;
+    }
+
+    /* 後半でまた暗く */
+    85% {
+        opacity: 0.9;
+    }
+
+    90% {
+        opacity: 0.6;
+    }
+}
+
+/* ーーー トップ画面の説明テキスト用に追加 ーーー */
+.info-list {
+    text-align: left;
+    width: 35vw;
+    /* box-sizing: border-box; */
+    /* overflow: hidden; */
+    
+    /* ▼ 変更：上下の margin: auto; を廃止し、固定値にすることで散らばりを防ぎます */
+    margin: 10px auto 10px 1vw; 
+    font-family: 'Onryou', serif;
+    
+    border-top: none;
+    border-bottom: none;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* 既存の p タグの背景や影のスタイルを打ち消すための専用クラス */
+.info-list .info-item {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    margin-top: 0 !important;      /* 線の間隔を整えるため0に */
+    margin-bottom: 0 !important;   /* 線の間隔を整えるため0に */
+    /* box-sizing: border-box;
+    width: 100%; */
+    /* ▼ 変更：1行（1項目）ずつの上下に隙間を作ります */
+    padding: 12px 0 !important; 
+    font-size: 20px;
+    color: #939393;
+    display: flex;
+    align-items: center;
+
+    /* ▼ 追加：1行ずつの下に境界線を引きます */
+    border-bottom: 1px solid #939393;
+}
+
+/* 一番上の行だけ、上側にも線を引くことで綺麗に挟まれます */
+.info-list .info-item:first-child {
+    border-top: 1px solid #939393;
+}
+
+/* アイコン部分の調整 */
+.info-list .icon {
+    display: inline-block;
+    width: 30px;
+    text-align: center;
+    margin-right: 10px;
+    font-size: 22px;
+
+    /* ▼ 追加：カラーの絵文字（時計や指）を100%白黒（モノクロ）にする */
+    filter: grayscale(100%);
+
+    /* ▼ 追加：他の手書き文字の不気味なトーンと馴染ませるため、少しだけ透過させる */
+    opacity: 0.8;
+}
