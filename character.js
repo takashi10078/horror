@@ -114,21 +114,3 @@ setInterval(() => {
     setTimeout(blink, randomTime);
 
 }, 7000);
-
-const lights = document.querySelectorAll(".light");
-
-function flicker() {
-
-    // 0～2のどれか1つを選ぶ
-    const light = lights[Math.floor(Math.random() * lights.length)];
-
-    light.style.opacity = "1";
-
-    setTimeout(() => {
-        light.style.opacity = "0";
-    }, 80);
-
-    setTimeout(flicker, Math.random() * 1000 + 300);
-}
-
-flicker();

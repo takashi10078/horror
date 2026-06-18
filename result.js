@@ -31,26 +31,26 @@ window.addEventListener("DOMContentLoaded", () => { // DOMContentLoaded（ドム
       resultDesc = `
       <h4 class="fearRate">怖がり度 ${fearPercent}%</h4>
       <h3>診断記録</h3>
-      <p>あなたは恐怖への耐性が極めて高いようです。異変を目の前にしても冷静さを失いません。</p>
+      <div class="resultmessage">あなたは恐怖への耐性が極めて高いようです。異変を目の前にしても冷静さを失いません。</div>
 
       <h3>警告</h3>
-      <p>危険な場所へ近づきすぎる傾向があります。好奇心には注意してください。</p>
+      <div class="resultmessage">危険な場所へ近づきすぎる傾向があります。好奇心には注意してください。</div>
 
       <h3>観察結果</h3>
-      <p>心霊遭遇率は低いと判定されました。</p>`;
+      <div class="resultmessage">心霊遭遇率は低いと判定されました。</div>`;
     } else if (score <= 59) {
       resultText = '<img src="./img/result.png" class="resultImg">';
 
       resultDesc = `
       <h4 class="fearRate">怖がり度 ${fearPercent}%</h4>
       <h3>診断記録</h3>
-      <p>あなたは恐怖に対して一定の耐性を持っています。異変を感じても落ち着いて行動できます。</p>
+      <div class="resultmessage">あなたは恐怖に対して一定の耐性を持っています。異変を感じても落ち着いて行動できます。</div>
 
       <h3>警告</h3>
-      <p>油断していると予想外の恐怖に巻き込まれる可能性があります。</p>
+      <div class="resultmessage">油断していると予想外の恐怖に巻き込まれる可能性があります。</div>
 
       <h3>観察結果</h3>
-      <p>心霊遭遇率は平均よりやや低めです。</p>`;
+      <div class="resultmessage">心霊遭遇率は平均よりやや低めです。</div>`;
 
     } else if (score <= 74) {
       resultText = '<img src="./img/result.png" class="resultImg">';
@@ -58,13 +58,13 @@ window.addEventListener("DOMContentLoaded", () => { // DOMContentLoaded（ドム
       resultDesc = `
       <h4 class="fearRate">怖がり度 ${fearPercent}%</h4>
       <h3>診断記録</h3>
-      <p>あなたは一般的な恐怖心を持っています。異変を察知する感覚は標準的です。</p>
+      <div class="resultmessage">あなたは一般的な恐怖心を持っています。異変を察知する感覚は標準的です。</div>
 
       <h3>警告</h3>
-      <p>深夜の探索や単独行動は推奨されません。</p>
+      <div class="resultmessage">深夜の探索や単独行動は推奨されません。</div>
 
       <h3>観察結果</h3>
-      <p>心霊遭遇率は平均的と判定されました。</p>`;
+      <div class="resultmessage">心霊遭遇率は平均的と判定されました。</div>`;
 
     } else {
       resultText = '<img src="./img/result.png" class="resultImg">';
@@ -72,13 +72,13 @@ window.addEventListener("DOMContentLoaded", () => { // DOMContentLoaded（ドム
       resultDesc = `
       <h4 class="fearRate">怖がり度 ${fearPercent}%</h4>
       <h3>診断記録</h3>
-      <p>あなたは恐怖を敏感に察知する能力を持っています。わずかな異変にも気付くでしょう。</p>
+      <div class="resultmessage">あなたは恐怖を敏感に察知する能力を持っています。わずかな異変にも気付くでしょう。</div>
 
       <h3>警告</h3>
-      <p>夜間に一人でこのサイトを閲覧することは推奨されません。</p>
+      <div class="resultmessage">夜間に一人でこのサイトを閲覧することは推奨されません。</div>
 
       <h3>観察結果</h3>
-      <p>心霊遭遇率が高い可能性があります。背後には十分注意してください。</p>`;
+      <div class="resultmessage">心霊遭遇率が高い可能性があります。背後には十分注意してください。</div>`;
     }
 
     const resultTarget = document.getElementById("result"); // result.htmlのresultを取得
