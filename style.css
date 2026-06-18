@@ -2,6 +2,7 @@
     /* 余白をすべて0にリセット */
     margin: 0px;
     padding: 0px;
+    box-sizing: border-box;
 }
 
 .index-body {
@@ -38,6 +39,11 @@ body {
 
     /* 背景をゆらゆら */
     animation: hospitalMove 50s linear infinite;
+}
+
+body:not(.index-body) {
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 @keyframes hospitalMove {
@@ -169,16 +175,17 @@ h4 {
     /* 質問とアバターを横並びにする */
     display: flex;
     /* 中身を中央寄せ */
-    justify-content: center; 
-    gap: 1vw;               
+    justify-content: center;                
     /* 横並びの上のラインを揃える */
     align-items: flex-start;
     /* 全体の最大横幅 */
-    width: 94vw;
-    height: 84vh;
+    width: min(96vw, 1540px);
+    min-height: min(88vh, 930px);
+    height: auto;
     /* 全体を画面の真ん中に寄せる */
     margin: 0 auto 0;          
-    padding: 20px 0 20px;
+    gap: 34px;
+    padding: 20px 34px;
     background-color: rgba(12, 8, 8, 0.541);
     /* 角を丸くする */
     border-radius: 10px;
@@ -188,17 +195,18 @@ h4 {
 
 .sindan_block {
     /* 左右の枠をバランスよく伸縮させる */
-    flex: 1;
-    width: 100%;
-    max-width: 480px;
-    height: 85vh;
+    flex: 0 1 540px;
+    width: min(100%, 540px);
+    max-width: 540px;
+    height: min(84vh, 890px);
+    min-height: 620px;
     text-align: center;
 }
 
 #sindanForm {
     width: 100%;
     /* 高さを330pxに固定 */
-    height: 84vh;             
+    height: 100%;             
     /* はみ出た質問は縦スクロールさせる */
     overflow-y: scroll;       
     /* スクロールバーと文字の重なり防止 */
@@ -222,6 +230,7 @@ h4 {
     justify-content: center; 
     align-items: center;
     gap: 5px; 
+    min-width: 0;
 }
 
 /* 💡 追加：背景画像だけを配置して半透明にする設定 */
@@ -381,7 +390,7 @@ input[type="radio"]:checked::after {
 #startBtn {
     margin-top: 15px;
     color: #939393;
-    width: 20vw;
+    width: min(100%, 390px);
     height: 55px;
     font-family: 'Onryou', serif;
 }
@@ -393,7 +402,7 @@ input[type="radio"]:checked::after {
     align-items: center;
 
     margin: 5px auto;
-    width: 20vw;
+    width: min(100%, 390px);
     height: 55px;
 
     font-size: 25px;
@@ -423,32 +432,40 @@ input[type="radio"]:checked::after {
 }
 
 .resultImg { /*結果画像*/
-    width: 75vw;
-    height: 97vh;
+    display: block;
+    width: 100vw;
+    max-height: none;
+    height: 100vh;
+    object-fit: cover;
     background-color: rgba(40, 40, 40, 0.596);
-    border-radius: 14px;
-    box-shadow: 1px 1px 20px 1px rgb(128, 128, 128);
-    margin-top: 5px;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0 calc(50% - 50vw) 40px;
 }
 
 /* 結果表示エリアの設定 */
 #resultArea {
     box-sizing: border-box;
+    width: 100%;
+    margin: 0 auto;
 }
 
 #resultArea #result p {
     /* 文章の幅を上の画像（450px）と揃える */
-    width: 450px;
+    width: min(100%, 640px);
+    padding-right: 18px;
 }
 
 #result{
     margin-bottom: 50px;
+    display: block;
 }
 
 
 #avatar-frame{
-    width: 45vw;
-    height: 80vh;
+    flex: 0 1 820px;
+    width: min(54vw, 820px);
+    height: min(84vh, 850px);
 
     position: relative;
     overflow: hidden;
@@ -459,9 +476,9 @@ input[type="radio"]:checked::after {
     border-radius: 30px 30px 12px 12px;
     border: 6px solid #020101a1;
     box-shadow:1px 1px 20px 1px rgb(128, 128, 128);
-    flex-shrink: 0;
+    min-width: 0;
 
-    margin: auto 20px auto 20px;
+    margin: auto 0;
 
     animation: houseMove 40s linear infinite;
 }
@@ -736,12 +753,12 @@ html {
 /* ーーー トップ画面の説明テキスト用に追加 ーーー */
 .info-list {
     text-align: left;
-    width: 35vw;
+    width: min(100%, 540px);
     /* box-sizing: border-box; */
     /* overflow: hidden; */
     
     /* ▼ 変更：上下の margin: auto; を廃止し、固定値にすることで散らばりを防ぎます */
-    margin: 10px auto 10px 1vw; 
+    margin: 10px auto;
     font-family: 'Onryou', serif;
     
     border-top: none;
@@ -787,4 +804,63 @@ html {
 
     /* ▼ 追加：他の手書き文字の不気味なトーンと馴染ませるため、少しだけ透過させる */
     opacity: 0.8;
+}
+
+@media (max-width: 1100px) {
+    .index-body {
+        overflow: hidden;
+    }
+
+    #wrapper {
+        align-items: flex-start;
+        padding: 56px 0 28px;
+    }
+
+    .flex-container {
+        flex-direction: column;
+        align-items: center;
+        width: min(94vw, 760px);
+        min-height: 0;
+        padding: 18px;
+    }
+
+    .sindan_block {
+        flex: none;
+        height: auto;
+        min-height: 560px;
+    }
+
+    #sindanForm {
+        height: min(72vh, 760px);
+    }
+
+    #avatar-frame {
+        width: min(100%, 620px);
+        height: min(68vh, 620px);
+    }
+}
+
+@media (max-height: 760px) {
+    .index-body {
+        overflow: hidden;
+    }
+
+    #wrapper {
+        align-items: center;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .flex-container {
+        min-height: 0;
+    }
+
+    .sindan_block {
+        height: min(84vh, 640px);
+        min-height: 0;
+    }
+
+    #avatar-frame {
+        height: min(84vh, 640px);
+    }
 }
