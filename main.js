@@ -6,6 +6,11 @@ const ghostWoman = document.getElementById("ghostWoman"); // おばけの女性
 const scaryGhosts = document.querySelectorAll(".scary-ghost");
 const answerTimer = document.getElementById("answerTimer");
 let countdownTimerId = null;
+let quizCountdownId = null;
+let quizGhostTimeoutId = null;
+const timerAudio = new Audio('./timer.mp3'); // 音声ファイルの読み込み
+const ghostAudio = new Audio('./noise.m4a'); // おばけの出現音
+const transitionAudio = new Audio('./noise2.m4a'); // 遷移音
 let ghostTimerId = null;
 let ghostShown = false; // scary image has already been shown
 
@@ -15,39 +20,63 @@ function showGhostWoman() {
   ghostShown = true;
   scaryGhosts.forEach((ghost) => ghost.classList.add("show"));
 
+  // おばけが出た瞬間に効果音を再生
+  ghostAudio.currentTime = 0;
+  ghostAudio.play().catch(error => {
+    console.log("おばけ音の再生に失敗しました:", error);
+  });
+
   setTimeout(() => {
     scaryGhosts.forEach((ghost) => ghost.classList.remove("show"));
   }, 3000);
 }
 
 function startAnswerTimer() {
-  let remainingSeconds = 30;
+  let timerSeconds = 30; // 30秒からスタート
   ghostShown = false;
 
-  clearInterval(countdownTimerId);
-  clearTimeout(ghostTimerId);
+  // 動いているタイマーをすべてリセット
+  clearInterval(quizCountdownId);
+  clearTimeout(quizGhostTimeoutId);
+
+  // おばけの音も念のため止めておく
+  ghostAudio.pause();
+  ghostAudio.currentTime = 0;
+
+  // カウントダウン音声を最初から再生する設定
+  timerAudio.pause();
+  timerAudio.currentTime = 0;
+  
+  // 音声を再生（スタートボタンをクリックしているので、Chromeの規約をクリアして100%鳴ります）
+  timerAudio.play().catch(error => {
+    console.log("オーディオの再生に失敗しました:", error);
+  });
 
   if (answerTimer) {
     answerTimer.textContent = "00:30";
   }
 
-  countdownTimerId = setInterval(() => {
-    remainingSeconds--;
+  // 1秒ごとに実行されるタイマー
+  quizCountdownId = setInterval(() => {
+    timerSeconds--;
 
+    // 画面の残り秒数を正確に更新（1秒ごと）
     if (answerTimer) {
-      const minutes = String(Math.floor(remainingSeconds / 60)).padStart(2, "0");
-      const seconds = String(remainingSeconds % 60).padStart(2, "0");
-      answerTimer.textContent = `${minutes}:${seconds}`;
+      const mins = String(Math.floor(timerSeconds / 60)).padStart(2, "0");
+      const secs = String(timerSeconds % 60).padStart(2, "0");
+      answerTimer.textContent = `${mins}:${secs}`;
     }
 
-    if (remainingSeconds <= 0) {
-      clearInterval(countdownTimerId);
+    // タイマー終了処理
+    if (timerSeconds <= 0) {
+      clearInterval(quizCountdownId);
+      timerAudio.pause(); // 30秒経ったらカウントダウン音を止める
     }
   }, 1000);
 
-  ghostTimerId = setTimeout(showGhostWoman, 30000);
+  // 30秒後におばけを表示
+  quizGhostTimeoutId = setTimeout(showGhostWoman, 30000);
 }
-
 // jsonファイル取得 Ajax使用
 async function loadQuestions() {
   try { // 例外処理
@@ -99,6 +128,24 @@ if(form){
   form.addEventListener("submit", (e) => { // (e)イベント処理 診断ボタンを押したとき
     e.preventDefault(); // 計算をするのでいったんresult.htmlに飛ばすのをやめる
 
+    // 【追加】ボタンが押されたので、すべてのタイマーと音を強制停止する
+    clearInterval(quizCountdownId);
+    clearTimeout(quizGhostTimeoutId);
+    
+    if (timerAudio) {
+      timerAudio.pause();
+      timerAudio.currentTime = 0;
+    }
+    if (ghostAudio) {
+      ghostAudio.pause();
+      ghostAudio.currentTime = 0;
+    }
+
+    transitionAudio.currentTime = 0;
+    transitionAudio.play().catch(error => {
+      console.log("演出音の再生に失敗しました:", error);
+    });
+
     //結果項目の変数定義
     let score = 0; // 総合スコア
 
@@ -108,7 +155,6 @@ if(form){
       let value = Number(selected.value); // valueに値を入れる
 
       score += value; // 総合スコアに加算
-
     }
 
     localStorage.setItem("score", score);
@@ -116,13 +162,12 @@ if(form){
     // 遷移演出開始
     document.body.classList.add("result-transition");
 
-    // 5秒後に結果へ
+    // 10秒後に結果へ
     setTimeout(() => {
         location.href = "result.html";
-    }, 5000);
+    }, 10000);
   });
 }
-
 
 const startBtn = document.getElementById("startBtn"); // startBtnを取得
 const textBox = document.querySelector(".text-box"); // 質問フォームを取得 

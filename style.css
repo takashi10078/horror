@@ -87,7 +87,7 @@ body.result-transition::after {
     inset: 0;
     background: black;
     opacity: 0;
-    animation: fadeDark 3.5s forwards;
+    animation: fadeDark 6s forwards;
     pointer-events: none;
     z-index: 99999;
 }
@@ -106,11 +106,11 @@ body.result-transition::after {
     }
 
     60% {
-        opacity: 0.05;
+        opacity: 0.1;
     }
 
     80% {
-        opacity: 0.15;
+        opacity: 0.25;
     }
 
     95% {
@@ -140,12 +140,61 @@ h1 {
     margin-top: 0;
     margin-bottom: 0;
     font-size: 65px;
+    display: inline-block;
+    width: 100%;
+    /* 💡 2秒かけて常にループ。等速(linear)で切れ目なく動かします */
+    animation: constant-horror-h1 3s linear infinite;
 }
 
 h2 {
     margin-top: 0;
     margin-bottom: 0;
     font-size: 35px;
+    display: inline-block;
+    width: 100%;
+    /* 💡 h2は別の不規則パターンで常にループ */
+    animation: constant-horror-h2 3s linear infinite;
+}
+
+/* ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝
+   常時駆動・不規則メリハリ（h1・h2でタイミング変化）
+＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ */
+
+/* 【h1】基本は細かく揺れ、中盤（40%〜60%）に大暴れする */
+@keyframes constant-horror-h1 {
+    /* 前半：じわじわと細かい不気味な揺れ */
+    0%   { transform: translate(0px, 0px); }
+    15%  { transform: translate(-2px, 1px); }
+    30%  { transform: translate(1px, -2px); }
+    
+    /* 中盤：急に大きな発作のような激しいブレ（拡大縮小ブレも融合） */
+    40%  { transform: translate(-7px, 5px) scale(1.03); }
+    45%  { transform: translate(6px, -6px) scale(0.97); }
+    50%  { transform: translate(-5px, -3px) scale(1.02); }
+    55%  { transform: translate(5px, 4px) scale(1); }
+    
+    /* 後半：また細かい揺れに戻る */
+    70%  { transform: translate(-1px, 2px); }
+    85%  { transform: translate(2px, -1px); }
+    100% { transform: translate(0px, 0px); }
+}
+
+/* 【h2】基本は細かく揺れ、終盤（75%〜95%）に大暴れする（h1と逆方向） */
+@keyframes constant-horror-h2 {
+    /* 前半〜中盤：じわじわと細かい不気味な揺れ */
+    0%   { transform: translate(0px, 0px); }
+    20%  { transform: translate(2px, -1px); }
+    40%  { transform: translate(-1px, 2px); }
+    60%  { transform: translate(1px, -2px); }
+    70%  { transform: translate(-2px, 1px); }
+    
+    /* 終盤：h1と入れ替わりで突然大暴れ（数値もh1と逆転） */
+    75%  { transform: translate(7px, -5px) scale(0.97); }
+    80%  { transform: translate(-6px, 6px) scale(1.03); }
+    85%  { transform: translate(5px, 3px) scale(0.98); }
+    90%  { transform: translate(-5px, -4px) scale(1); }
+    
+    100% { transform: translate(0px, 0px); }
 }
 
 h3 {
@@ -171,6 +220,38 @@ h4 {
     text-decoration: none; 
     /* マウスを乗せたときに指マークにする */
     cursor: pointer; 
+
+    /* 💡 ホバー時の変化を滑らかにする設定を追加 */
+    font-family: 'Onryou', serif; /* 念のためフォント指定も確実にしておきます */
+    transition: color 0.2s ease, text-shadow 0.1s ease;
+    will-change: transform;
+}
+
+/* 💡 【homeボタン：ホバー時】白黒の残像をまといながらプルプル震える */
+.home-btn:hover {
+    color: #c8c8c8; /* マウスが載るとパッと明るいグレーに */
+    
+    /* 左右に黒と白の影を作り、文字が歪んでダブって見える残像ノイズ効果 */
+    text-shadow: 2px 1px 0px rgba(0, 0, 0, 0.9), -2px -1px 0px rgba(255, 255, 255, 0.4); 
+    
+    /* 💡 ボタン専用の高速プルプル振動（btn-shiver）を適用 */
+    animation: btn-shiver 0.1s infinite;
+}
+
+.horror-text {
+    display: inline-block; /* 震えさせるために必要 */
+    color: #939393;
+    font-weight: bold;
+    animation: horror-shake 6s infinite;
+}
+
+@keyframes horror-shake {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-2px, 1px); }
+    40% { transform: translate(1px, -1px); }
+    60% { transform: translate(-1px, 2px); }
+    80% { transform: translate(2px, 1px); }
+    100% { transform: translate(0, 0); }
 }
 
 .flex-container {
@@ -302,7 +383,25 @@ p {
     /* 変化を0.2秒でなめらかにする */
     transition: 0.2s;
     font-size: 22px;
-    box-shadow:1px 1px 20px 1px rgb(128, 128, 128);
+    box-shadow: 1px 1px 20px 1px rgb(128, 128, 128);
+
+    /* 💡 以下の2行を追加します */
+    display: block; /* 揺れを正しく反映させるため */
+    
+    /* 4秒かけて、文字の読みやすさを邪魔しない極小の震えをループ */
+    animation: text-shiver-gentle 4s linear infinite;
+}
+
+/* ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝
+   【質問文用】可読性を落とさない、かすかな常時微振動
+＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ */
+@keyframes text-shiver-gentle {
+    0%   { transform: translate(0px, 0px); }
+    20%  { transform: translate(-0.5px, 0.4px); } /* 1px未満の極小のズレ */
+    40%  { transform: translate(0.4px, -0.3px); }
+    60%  { transform: translate(-0.4px, -0.4px); }
+    80%  { transform: translate(0.5px, 0.3px); }
+    100% { transform: translate(0px, 0px); }
 }
 
 .answer-timer {
@@ -395,8 +494,22 @@ input[type="radio"]:checked::after {
     width: min(100%, 360px);
     height: 55px;
     font-family: 'Onryou', serif;
+
+    /* 💡 変化を滑らかにし、ノイズ感を出すための準備 */
+    transition: color 0.2s ease, text-shadow 0.1s ease;
+    cursor: pointer;
 }
 
+/* 💡 【スタートボタン：ホバー時】文字の掠れが二重にブレる、古いビデオ風ノイズ */
+#startBtn:hover {
+    color: #c8c8c8; /* パッと一段階明るいグレーになり、文字を読ませる */
+    
+    /* 左右に黒と白の「残像の影」を作り、文字が歪んでダブって見えるようにします */
+    text-shadow: 2px 1px 0px rgba(0, 0, 0, 0.9), -2px -1px 0px rgba(255, 255, 255, 0.4); 
+    
+    /* 常時お伝えしている高速微振動 */
+    animation: btn-shiver 0.1s infinite;
+}
 
 .styled {
     display: flex;
@@ -411,7 +524,6 @@ input[type="radio"]:checked::after {
     font-family: 'Onryou', serif;
 
     border-radius: 50px;
-    border: none;
 
     background: rgba(27, 27, 27, 0.813);
     border: 1px solid #555;
@@ -423,6 +535,47 @@ input[type="radio"]:checked::after {
 
     text-decoration: none;
     box-sizing: border-box;
+
+    /* 💡 transitionに「box-shadow」と「background」を追加して不気味なヌルッと感を出す */
+    transition: all 0.3s ease;
+    will-change: transform;
+}
+
+/* 💡 【選択肢ボタン：ホバー時】枠線が冷たく発光し、ボタン全体がパチパチと明滅 */
+.styled:hover {
+    color: #b0b0b0; /* 明るすぎない、イラストの背景に馴染む淡いグレー */
+    border-color: #888; /* 枠の線を少し明るくして、ボタンの存在感を出す */
+    background: rgba(10, 10, 10, 0.95); /* 現在の背景より、さらに深い「吸い込まれるような黒」に */
+    
+    /* 冷たくて薄い、霧のような白いぼかし影をボタンの周りにまとわせます */
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15), inset 0 0 8px rgba(255, 255, 255, 0.05); 
+    
+    /* 微振動 ＋ 呪いのビデオのような不規則な明滅（パチパチ感） */
+    animation: btn-shiver 0.1s infinite, horror-flicker 0.5s infinite;
+}
+
+/* ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝
+   【ボタン用】白黒の世界観に完全に溶け込むアニメーション
+＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ */
+
+/* 高速な微振動 */
+@keyframes btn-shiver {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-1px, 0.5px); }
+    50% { transform: translate(1px, -0.5px); }
+    75% { transform: translate(-0.5px, -1px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* 壊れかけた古いモニターのように、一瞬だけボタンの透明度が不規則に落ちる（点滅） */
+@keyframes horror-flicker {
+    0%, 100% { opacity: 1; }
+    40% { opacity: 1; }
+    41% { opacity: 0.4; } /* 一瞬だけ不自然にパチッと暗くなる */
+    43% { opacity: 0.8; }
+    80% { opacity: 0.8; }
+    81% { opacity: 0.2; } /* 消えかけるノイズ */
+    83% { opacity: 1; }
 }
 
 .black-and-white-emoji {
@@ -438,7 +591,7 @@ input[type="radio"]:checked::after {
     max-height: none;
     height: 100vh;
     object-fit: cover;
-    background-color: rgba(40, 40, 40, 0.596);
+    background-color: rgba(33, 33, 33, 0.732);
     border-radius: 0;
     box-shadow: none;
     margin: 0 auto;
@@ -795,6 +948,25 @@ html {
     border-bottom: none;
     padding-top: 0;
     padding-bottom: 0;
+
+    /* 💡 ここから下にアニメーションの設定を追加しました */
+    display: block; 
+    /* 10秒かけて、h1やh2とは違うテンポで常にじわじわ揺らす */
+    animation: constant-horror-list 10s linear infinite;
+}
+
+/* ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝
+   【info-list用】じわじわ・モゾモゾとした常時揺れ
+＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ ＝ */
+@keyframes constant-horror-list {
+    0%   { transform: translate(0px, 0px) rotate(0deg); }
+    15%  { transform: translate(-2px, 2px) rotate(-0.2deg); }
+    30%  { transform: translate(1px, -3px) rotate(0.1deg); }
+    45%  { transform: translate(-3px, -1px) rotate(-0.1deg); }
+    60%  { transform: translate(2px, 3px) rotate(0.2deg); }
+    75%  { transform: translate(-1px, -2px) rotate(-0.2deg); }
+    90%  { transform: translate(3px, 1px) rotate(0.1deg); }
+    100% { transform: translate(0px, 0px) rotate(0deg); }
 }
 
 /* 既存の p タグの背景や影のスタイルを打ち消すための専用クラス */
