@@ -20,6 +20,8 @@ body {
     text-align: center;
     color: #939393;
 
+    background-color: #3c3c3c;
+
     /* 背景画像の設定 */
     background-image: url(./img/back.png);
 
@@ -148,12 +150,12 @@ h2 {
 
 h3 {
     margin-top: 40px;
-    font-size: 180px;
+    font-size: 130px;
 }
 
 h4 {
     margin: 20px auto 20px;
-    font-size: 200px;
+    font-size: 150px;
 }
 
 .home-btn {
@@ -433,14 +435,13 @@ input[type="radio"]:checked::after {
 
 .resultImg { /*結果画像*/
     display: block;
-    width: 100vw;
     max-height: none;
     height: 100vh;
     object-fit: cover;
     background-color: rgba(40, 40, 40, 0.596);
     border-radius: 0;
     box-shadow: none;
-    margin: 0 calc(50% - 50vw) 40px;
+    margin: 0 auto;
 }
 
 .resultmessage {
@@ -481,6 +482,13 @@ input[type="radio"]:checked::after {
 #result{
     margin-bottom: 50px;
     display: block;
+}
+
+#noResult {
+    margin-top: 10px;
+    font-size: 58px;
+    color: #939393;
+    text-align: center;
 }
 
 
@@ -829,7 +837,7 @@ html {
 }
 
 /* 💡 画面幅が1800px以上、かつ高さが1000px以上のとき（1980x1080環境など）にのみ適用 */
-@media (min-width: 1800px) and (min-height: 1000px) {
+@media (min-width: 1800px) and (min-height: 900px) {
 
     /* 先ほど調整した、テキストボックスを左に伸ばす設定 */
     .sindan_block {

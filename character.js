@@ -38,7 +38,7 @@ setInterval(() => {
     faceAngle += 0.05;
 
     const moveX = Math.sin(faceAngle) * 2;
-    const moveY = Math.cos(faceAngle * 0.8) * 1.5;
+    const moveY = Math.cos(faceAngle * 0.8) * 6;
 
     face.style.transform =
         `translate(${moveX}px, ${moveY}px)`;
