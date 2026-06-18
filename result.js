@@ -1,4 +1,4 @@
-// サイトにアクセスした瞬間に結果を計算して表示
+// サイトにアクセスした瞬間に結果を計算して表示あいうえお
 window.addEventListener("DOMContentLoaded", () => { // DOMContentLoaded（ドム・コンテンツ・ローデッド）とは、ブラウザがHTMLの読み込みと解析（パース）を完了し、DOMツリーの構築がすべて終わった時点で発火するJavaScriptのイベント
   try {
     // ローカルストレージにデータがあるか確認
