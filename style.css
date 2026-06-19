@@ -122,6 +122,78 @@ body.result-transition::after {
     }
 }
 
+/* 黒画面 */
+#startOverlay{
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 99999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    transition: opacity 1.5s ease;
+}
+
+#startOverlay.hide{
+    opacity: 0;
+    pointer-events: none;
+}
+
+.overlay-text{
+    color: white;
+    font-size: 40px;
+    letter-spacing: 5px;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink{
+    0%,100%{
+        opacity: 1;
+    }
+    50%{
+        opacity: 0.3;
+    }
+}
+
+#handsContainer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.scary-hand {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0; /* 初期状態は透明 */
+    /* CSSアニメーションのみで制御（JS側でのscale指定と干渉しないよう基点を中心に設定） */
+    transform-origin: center; 
+    animation: handAppear 1.5s ease-out forwards;
+}
+
+@keyframes handAppear {
+    0% {
+        opacity: 0;
+        /* JSで設定した初期サイズ(1倍)からスタート */
+        transform: translate(-50%, -50%) rotate(var(--angle)) scale(1);
+    }
+    30% {
+        opacity: 0.8;
+    }
+    70% {
+        opacity: 1;
+        /* その場で少し大きくする */
+        transform: translate(-50%, -50%) rotate(var(--angle)) scale(1.3);
+    }
+    100% {
+        opacity: 0;
+        /* さらに拡大しながら消える */
+        transform: translate(-50%, -50%) rotate(var(--angle)) scale(1.5);
+    }
+}
+
 #wrapper {
     min-height: 100vh;
     /* 中身を画面の上下左右の真ん中に配置 */

@@ -11,7 +11,11 @@ let quizGhostTimeoutId = null;
 const timerAudio = new Audio('./timer.mp3'); // 音声ファイルの読み込み
 const ghostAudio = new Audio('./noise.m4a'); // おばけの出現音
 const transitionAudio = new Audio('./noise2.m4a'); // 遷移音
-let ghostTimerId = null;
+const startBtn = document.getElementById("startBtn"); // startBtnを取得
+const textBox = document.querySelector(".text-box"); // 質問フォームを取得 
+const startOverlay = document.getElementById("startOverlay");
+const bgm = document.getElementById("bgm");
+const handsContainer = document.getElementById("handsContainer");let ghostTimerId = null;
 let ghostShown = false; // scary image has already been shown
 
 function showGhostWoman() {
@@ -169,19 +173,108 @@ if(form){
   });
 }
 
-const startBtn = document.getElementById("startBtn"); // startBtnを取得
-const textBox = document.querySelector(".text-box"); // 質問フォームを取得 
 
 if(startBtn){
   startBtn.addEventListener("click", () => {
+
+    // BGM停止
+    if(bgm){
+      bgm.pause();
+      bgm.currentTime = 0;
+    }
+
     //「診断スタート」ボタンのある画面を消す
     if(textBox){ textBox.style.display = "none"; }
-    
-    // 診断フォームを表示する（この時点ではまだ中身は空）
+
+    // 診断フォームを表示
     if(form){ form.style.display = "block"; }
-    
-    // JSONから質問を読み込んで画面に表示する
+
+    // 質問を読み込む
     loadQuestions();
+
+    // タイマー開始（この中でtimer.mp3が再生される）
     startAnswerTimer();
   });
 }
+
+
+if(startOverlay){
+    startOverlay.addEventListener("click", () => {
+
+        clearInterval(handInterval);
+
+        // BGM再生
+        bgm.play().catch(error => {
+            console.log("BGM再生失敗:", error);
+        });
+
+        // 黒画面をフェードアウト
+        startOverlay.classList.add("hide");
+
+        // 完全に削除
+        setTimeout(() => {
+            startOverlay.remove();
+        }, 1500);
+    });
+}
+
+function spawnHand() {
+    if (!handsContainer) return;
+
+    const hand = document.createElement("img");
+    hand.src = "./img/hand2.png";
+    hand.classList.add("scary-hand");
+
+    // 1. ランダムサイズの設定
+    const size = 150 + Math.random() * 150;
+    hand.style.width = size + "px";
+
+    // 2. 中央の文字エリアを避ける配置ロジック
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const centerX = width / 2;
+    const centerY = height / 2;
+
+    // 避けたい中央エリアのサイズ（文字の大きさに合わせて調整してください）
+    const safeZoneWidth = 400; 
+    const safeZoneHeight = 200;
+
+    let x, y;
+
+    // 中央エリア以外に配置されるまで座標を再計算
+    do {
+        x = Math.random() * width;
+        y = Math.random() * height;
+    } while (
+        x > centerX - safeZoneWidth / 2 &&
+        x < centerX + safeZoneWidth / 2 &&
+        y > centerY - safeZoneHeight / 2 &&
+        y < centerY + safeZoneHeight / 2
+    );
+
+    // 画像の中心が計算した座標に重なるように配置
+    hand.style.left = x + "px";
+    hand.style.top = y + "px";
+
+    // 3. 画面中央を向く角度の計算
+    const angle = Math.atan2(centerY - y, centerX - x) * 180 / Math.PI;
+
+    // CSSの@keyframesに角度を渡すためのカスタムプロパティ（変数）を設定
+    hand.style.setProperty('--angle', `${angle}deg`);
+    // 位置ずれを防ぐためJS側での初期トランスフォームを設定
+    hand.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+
+    handsContainer.appendChild(hand);
+
+    // 4. アニメーション終了後に要素を削除（1.5s = 1500ms）
+    setTimeout(() => {
+        hand.remove();
+    }, 1500);
+}
+
+// 500msごとに4つの手を生成
+let handInterval = setInterval(() => {
+    for (let i = 0; i < 2; i++) {
+        spawnHand();
+    }
+}, 800);
